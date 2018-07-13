@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+	namespace：必须与对应的接口全类名一致
+	id:必须与对应接口的某个对应的方法名一致
+	
+ -->
+<mapper namespace="com.spring.dao.TdMapper">
+	
+	<select id="findAll" resultType="Td">
+		select fid id,fwelder_no welderNo,fname welderName from tb_welder where 1=1
+		<if test="str!=null and str!=''">
+			and ${str}
+		</if>
+	</select>
+	
+	<select id="findMachine" parameterType="String" resultType="Td">
+		select fequipment_no fequipment_no from tb_welding_machine where fposition=#{fposition}
+	</select>
+	
+	<select id="findAlldiv" parameterType="long" resultType="Td">
+		select fid fdi,fname fdn,fparent fdp,ftype fdt from tb_insframework where tb_insframework.fparent=#{fci} 
+	</select>
+	
+	<select id="findAllIns" parameterType="long" resultType="long">
+		select tb_users.users_insframework from tb_users where tb_users.id=#{fci} 
+	</select>
+	
+	<select id="findInsid" parameterType="String" resultType="long">
+		select fid fdn from tb_insframework where tb_insframework.fname=#{fdn} 
+	</select>
+	
+	<select id="findInsname" parameterType="long" resultType="String">
+		select fname fcn from tb_insframework where tb_insframework.fid=#{fci} 
+	</select>
+
+	<select id="findweld" parameterType="String" resultType="String">
+		select tb_welder.fname from tb_welder where tb_welder.fwelder_no=#{fci} 
+	</select>
+	
+	<select id="findPosition" parameterType="String" resultType="String">
+		select fposition from tb_welding_machine where fequipment_no=#{equip}
+	</select>
+	
+	<select id="getAllPosition" parameterType="String" resultType="Td">
+		select fequipment_no fequipment_no,fposition fposition from tb_welding_machine
+	</select>
+	
+	<select id="allWeldname" resultType="Td">
+		select fname fname,fwelder_no fwelder_no from tb_welder
+	</select>
+</mapper>

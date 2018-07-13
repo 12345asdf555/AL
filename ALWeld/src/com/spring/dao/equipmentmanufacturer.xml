@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.spring.dao.EquipmentManufacturerMapper">
+
+	<resultMap id="mMap" type="com.spring.model.EquipmentManufacturer">
+		<id column="fid" property="id" />
+		<result property="name" column="fname" />		
+		<result property="type" column="ftype" />
+		<result property="typeValue" column="ftype_value" />
+		
+	</resultMap>
+	
+	<select id="getmanuAll" resultMap="mMap">
+		SELECT fid, fname, ftype, ftype_value FROM tb_equipment_manufacturer
+	</select>
+	
+	<select id="getManuidByValue" resultType="java.math.BigInteger">
+		SELECT fid FROM tb_equipment_manufacturer WHERE fname = #{value}  and ftype=#{type}
+	</select>
+</mapper>

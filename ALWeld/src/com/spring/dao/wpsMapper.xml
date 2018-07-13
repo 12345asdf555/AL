@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- 
+	namespace：必须与对应的接口全类名一致
+	id:必须与对应接口的某个对应的方法名一致
+	
+ -->
+<mapper namespace="com.spring.dao.WpsMapper">
+
+	 <!-- mybsits_config中配置的alias类别名,也可直接配置resultType为类路劲 -->  
+	<select id="findAll" resultType="Wps">
+		select tb_mainwps.FID fid,tb_mainwps.FWPSNum fwpsnum,tb_mainwps.Fweld_I fweld_i,tb_mainwps.Fweld_V fweld_v,tb_mainwps.Fweld_I_MAX fweld_i_max,tb_mainwps.Fweld_I_MIN fweld_i_min,tb_mainwps.Fweld_V_MAX fweld_v_max,tb_mainwps.Fweld_V_MIN fweld_v_min,tb_mainwps.Fweld_Alter_I fweld_alter_i,tb_mainwps.Fweld_Alter_V fweld_alter_v,tb_mainwps.Fweld_PreChannel fweld_prechannel,tb_mainwps.FCReateDate fcreatedate,tb_mainwps.FUpdateDate fupdatedate,tb_mainwps.Fowner fowner,tb_mainwps.Fback fback,tb_mainwps.Fname fname,tb_mainwps.Fdiameter fdiameter,i.fid insid,i.fname insname from tb_mainwps left join tb_insframework i on tb_mainwps.Fowner=i.fid where 1=1
+		<if test="parent!=null and parent!=''">
+			and tb_insframework.fid = #{parent}
+		</if>
+		<if test="str!=null and str!=''">
+			and ${str}
+		</if>
+		 ORDER by tb_mainwps.FID
+	</select>
+	
+	<select id="findById" parameterType="BigInteger" resultType="Wps">
+		select tb_mainwps.FID fid,tb_mainwps.FWPSNum fwpsnum,tb_mainwps.Fweld_I fweld_i,tb_mainwps.Fweld_V fweld_v,tb_mainwps.Fweld_I_MAX fweld_i_max,tb_mainwps.Fweld_I_MIN fweld_i_min,tb_mainwps.Fweld_V_MAX fweld_v_max,tb_mainwps.Fweld_V_MIN fweld_v_min,tb_mainwps.Fweld_Alter_I fweld_alter_i,tb_mainwps.Fweld_Alter_V fweld_alter_v,tb_mainwps.Fweld_PreChannel fweld_prechannel,tb_mainwps.FCReateDate fcreatedate,tb_mainwps.FUpdateDate fupdatedate,tb_mainwps.Fowner fowner,tb_mainwps.Fback fback,tb_mainwps.Fname fname,tb_mainwps.Fdiameter fdiameter from tb_mainwps where tb_mainwps.FID=#{fid}
+	</select>
+	
+    <insert id="save" parameterType="Wps">
+		insert into tb_mainwps(FWPSNum,Fweld_I,Fweld_V,Fweld_I_MAX,Fweld_I_MIN,Fweld_V_MAX,Fweld_V_MIN,Fweld_Alter_I,Fweld_Alter_V,Fweld_PreChannel,FCReateDate,FUpdateDate,Fcreater,Fupdater,Fowner,Fback,Fname,Fdiameter) values(#{fwpsnum},#{fweld_i},#{fweld_v},#{fweld_i_max},#{fweld_i_min},#{fweld_v_max},#{fweld_v_min},#{fweld_alter_i},#{fweld_alter_v},#{fweld_prechannel},#{fcreatedate},#{fupdatedate},#{fcreater},#{fupdater},#{fowner},#{fback},#{fname},#{fdiameter});
+	</insert>
+	
+	<update id="update" parameterType="Wps">
+		update tb_mainwps set FWPSNum=#{fwpsnum},Fweld_I=#{fweld_i},Fweld_V=#{fweld_v},Fweld_I_MAX=#{fweld_i_max},Fweld_I_MIN=#{fweld_i_min},Fweld_V_MAX=#{fweld_v_max},Fweld_V_MIN=#{fweld_v_min},Fweld_Alter_I=#{fweld_alter_i},Fweld_Alter_V=#{fweld_alter_v},Fweld_PreChannel=#{fweld_prechannel},FUpdateDate=#{fupdatedate},Fupdater=#{fupdater},Fowner=#{fowner},Fback=#{fback},Fname=#{fname},Fdiameter=#{fdiameter} where FID=#{fid};
+	</update>
+	
+	<select id="getUsernameCount" parameterType="String" resultType="java.lang.Integer">
+		select count(*) from tb_mainwps where FWPSNum=#{fwpsnum}
+	</select>
+	
+	<select id="findByUid" parameterType="long" resultType="BigInteger">
+		select users_insframework insid from tb_users where id=#{fid}
+	</select>
+	
+	<select id="findIpById" parameterType="BigInteger" resultType="String">
+		select fIP from tb_welding_machine where fid=#{fid}
+	</select>
+	
+	<select id="findHistory" resultType="Wps">
+		select tb_mainwps.FWPSNum fwpsnum,tb_welding_machine.fequipment_no fname,tb_wps_welddevices.Fchannel fweld_prechannel,tb_wps_welddevices.FCReateDate fcreatedate from tb_wps_welddevices left join tb_mainwps on tb_wps_welddevices.FWeldWPSID=tb_mainwps.FID left join tb_welding_machine on tb_wps_welddevices.FWeldDevicesID=tb_welding_machine.fid where 1=1
+		<if test="parent!=null and parent!=''">
+			and tb_insframework.fid = #{parent}
+		</if>
+		ORDER by tb_wps_welddevices.FCReateDate desc
+	</select>
+	
+	<insert id="give" parameterType="Wps">
+		insert into tb_wps_welddevices(FWeldWPSID,FWeldDevicesID,Fchannel,FCReateDate,FUpdateDate,Fcreater,Fupdater,Fowner,Fback) values(#{fid},#{macid},#{fweld_prechannel},#{fcreatedate},#{fupdatedate},#{fcreater},#{fupdater},#{insid},#{fback});
+	</insert>
+	
+	<delete id="delete" parameterType="BigInteger">
+		delete from tb_mainwps where FID=#{fid};
+	</delete>
+	
+	<delete id="deleteHistory" parameterType="BigInteger">
+		delete from tb_wps_welddevices where FWeldWPSID=#{fid};
+	</delete>
+</mapper>
